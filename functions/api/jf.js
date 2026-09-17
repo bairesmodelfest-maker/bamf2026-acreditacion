@@ -21,6 +21,17 @@
 
 const JOTFORM_BASE = "https://api.jotform.com";
 
+// ─────────────────────────────────────────────────────────────────────────
+// ENDURECIDO: este proxy ya NO reenvía cualquier "path"/"op" que mande el
+// cliente. Solo permite exactamente lo que el kiosco de acreditación
+// necesita, contra el form de Inscripción, y solo puede tocar el campo de
+// "Acreditado". Así, aunque alguien descubra la URL pública y le pegue
+// directo a /api/jf con curl, no puede leer/editar/borrar nada fuera de
+// esto (ni Juzgamiento, ni Votos, ni otros forms que use la misma API Key).
+// ─────────────────────────────────────────────────────────────────────────
+const JOTFORM_FORM_ID = "240386129030651"; // Inscripción — único form permitido acá
+const CAMPO_ACREDITADO = "483";            // único campo que este proxy puede escribir
+
 export async function onRequestPost({ request, env }) {
   const cors = { "Access-Control-Allow-Origin": "*" };
 
@@ -45,6 +56,28 @@ export async function onRequestPost({ request, env }) {
   }
   if (op !== "get" && op !== "post" && op !== "delete") {
     return json({ ok: false, error: "Operación no soportada" }, 400, cors);
+  }
+
+  // Solo dos rutas válidas para este kiosco:
+  //  - GET  /form/<ID>/submissions   (buscar por DNI/orden)
+  //  - POST|DELETE /submission/<ID>  (marcar acreditado / borrar un modelo)
+  const isListSubmissions = op === "get" && path === `/form/${JOTFORM_FORM_ID}/submissions`;
+  const isSingleSubmission = /^\/submission\/[a-zA-Z0-9]+$/.test(path) && (op === "post" || op === "delete");
+
+  if (!isListSubmissions && !isSingleSubmission) {
+    return json({ ok: false, error: "Ruta no permitida para este proxy" }, 403, cors);
+  }
+
+  // Si es un POST a un submission (marcar Acreditado), el único campo que
+  // se puede tocar es el de Acreditado — así el kiosco no puede, aunque
+  // quisiera (o si alguien manipula el request), reescribir otros campos.
+  if (op === "post" && Array.isArray(formFields)) {
+    const soloAcreditado = formFields.every(function (pair) {
+      return pair[0] === `submission[${CAMPO_ACREDITADO}]`;
+    });
+    if (!soloAcreditado) {
+      return json({ ok: false, error: "Campo no permitido para este proxy" }, 403, cors);
+    }
   }
 
   const url = new URL(JOTFORM_BASE + path);
