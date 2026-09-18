@@ -464,19 +464,24 @@ button.org-metric.active.ok .org-metric-value{color:#a7c896}
   .welcome-title{font-size:clamp(48px,7vw,90px)}
   .welcome-sub{margin-bottom:32px;font-size:clamp(18px,2.5vw,26px)}
   .welcome-cta{padding:20px 40px}
-  /* Pantalla de ingresar DNI/Orden en horizontal: todo un ~40% más
-     chico que en vertical, así entra completo sin que "Volver" quede
-     tapado por la barra del navegador/SO de la tablet. */
+  /* Pantalla de ingresar DNI/Orden en horizontal: el teclado queda del
+     mismo tamaño que en vertical (no lo achicamos), pero "Volver" pasa
+     a estar al lado, no abajo, para que entre completo en la pantalla. */
   #s-input{padding-top:16px}
-  .input-title{font-size:clamp(20px,3vw,32px);margin-bottom:4px}
-  .input-hint{font-size:clamp(11px,1.3vw,15px);margin-bottom:10px}
-  .input-display{margin-bottom:10px;min-height:34px;padding:8px 20px;font-size:clamp(20px,3vw,34px)}
-  .keypad-wrap{flex-direction:row;align-items:flex-end;gap:14px}
-  .keypad{gap:7px;width:min(264px,52vw);margin-bottom:0}
-  .key{font-size:clamp(14px,2.2vw,20px)}
-  .key.special{font-size:clamp(9px,1.4vw,12px)}
-  .back-btn-bottom.back-btn-right{margin:0;padding:10px 20px;font-size:9px}
-  .alpha-kb{gap:4px}
+  .keypad-wrap{
+    display:grid;
+    grid-template-columns:auto auto;
+    align-items:end;
+    justify-content:center;
+    column-gap:24px;
+  }
+  /* Pisamos la vieja regla de margen (pensada para otro layout) a
+     propósito, con más especificidad, para que no vuelva a solaparse
+     con el teclado. */
+  #s-input .back-btn-bottom.back-btn-right{
+    margin:0 !important;
+    align-self:end;
+  }
 }
 </style>
 </head>
