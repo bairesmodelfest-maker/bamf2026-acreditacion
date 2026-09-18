@@ -325,7 +325,12 @@ button.org-metric.active.ok .org-metric-value{color:#a7c896}
 /* Alpha keyboard for apellido search */
 .alpha-kb{display:grid;grid-template-columns:repeat(10,1fr);gap:8px;width:min(1500px,97vw);margin-bottom:16px}
 .alpha-kb .key{aspect-ratio:1.15/1;font-size:clamp(20px,2.6vw,34px)}
-.alpha-kb .key.special{aspect-ratio:2.4/1;grid-column:span 2;font-size:clamp(16px,1.8vw,22px)}
+.alpha-kb .key.special{aspect-ratio:2.4/1;font-size:clamp(16px,1.8vw,22px)}
+/* OJO: grid-column:span 2 va SOLO en el botón de buscar (submit), no en
+   BORRAR — antes estaba en ".key.special" genérico, que los agarraba a
+   los dos, desbordaba la fila una columna, y por eso BUSCAR terminaba
+   saltando a su propia fila, lejos del teclado y de "Volver". */
+.alpha-kb .key.submit.special{grid-column:span 2}
 
 /* Search results */
 /* === SEARCH RESULTS POPUP (overlay grande para tablet 15") === */
@@ -458,7 +463,7 @@ button.org-metric.active.ok .org-metric-value{color:#a7c896}
   .confirm-meta{text-align:left}
   .model-item{grid-template-columns:60px 1fr;gap:12px;padding:14px 16px}
   .alpha-kb{grid-template-columns:repeat(7,1fr)}
-  .alpha-kb .key.special{grid-column:span 2}
+  .alpha-kb .key.submit.special{grid-column:span 2}
 }
 @media (orientation:landscape){
   .welcome-title{font-size:clamp(48px,7vw,90px)}
@@ -488,7 +493,8 @@ button.org-metric.active.ok .org-metric-value{color:#a7c896}
   .keypad-wrap.mode-alpha .key{font-size:clamp(18px,2vw,25px)}
   .keypad-wrap.mode-alpha .key.special{font-size:clamp(12px,1.4vw,18px)}
   .keypad-wrap.mode-alpha .back-btn-bottom.back-btn-right{
-    margin-left:32px !important;
+    /* Separación ≈ el ancho de una tecla de letra (ancho del teclado / 10) */
+    margin-left:calc(min(1190px,81vw) / 10) !important;
   }
 }
 </style>
