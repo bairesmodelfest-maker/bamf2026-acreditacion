@@ -473,7 +473,7 @@ button.org-metric.active.ok .org-metric-value{color:#a7c896}
     grid-template-columns:auto auto;
     align-items:end;
     justify-content:center;
-    column-gap:24px;
+    column-gap:48px;
   }
   /* Pisamos la vieja regla de margen (pensada para otro layout) a
      propósito, con más especificidad, para que no vuelva a solaparse
@@ -482,6 +482,16 @@ button.org-metric.active.ok .org-metric-value{color:#a7c896}
     margin:0 !important;
     align-self:end;
   }
+  /* Teclado de letras (apellido): es mucho más ancho que el numérico,
+     así que lo achicamos para que entre en la pantalla junto con el
+     botón "Volver" al lado, sin que ninguna letra quede afuera. */
+  .keypad-wrap.mode-alpha{column-gap:20px}
+  .keypad-wrap.mode-alpha .alpha-kb{
+    width:min(900px,62vw);
+    gap:5px;
+  }
+  .keypad-wrap.mode-alpha .key{font-size:clamp(13px,1.5vw,19px)}
+  .keypad-wrap.mode-alpha .key.special{font-size:clamp(9px,1.1vw,13px)}
 }
 </style>
 </head>
@@ -624,7 +634,7 @@ button.org-metric.active.ok .org-metric-value{color:#a7c896}
   <h2 class="input-title" id="inputTitle">Ingresá tu <em>DNI</em></h2>
   <p class="input-hint" id="inputHint">Sin puntos ni espacios</p>
   <div class="input-display empty" id="inputDisplay">0</div>
-  <div class="keypad-wrap">
+  <div class="keypad-wrap" id="keypadWrap">
     <div id="keypadMount"></div>
     <button class="back-btn-bottom back-btn-right" onclick="go('identify')">← Volver</button>
   </div>
@@ -1744,10 +1754,12 @@ function openInput(mode){
   var d = document.getElementById('inputDisplay');
   var km = document.getElementById('keypadMount');
   var sr = document.getElementById('searchResults');
+  var kw = document.getElementById('keypadWrap');
   sr.innerHTML = '';
   d.textContent = '';
   d.classList.add('empty');
   d.textContent = mode === 'apellido' ? 'Escribí tu apellido' : '0';
+  if(kw) kw.classList.toggle('mode-alpha', mode === 'apellido');
   if(mode === 'dni'){
     t.innerHTML = 'Ingresá tu <em>DNI</em>';
     h.textContent = 'Sin puntos ni espacios';
