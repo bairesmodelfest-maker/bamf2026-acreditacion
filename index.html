@@ -468,30 +468,28 @@ button.org-metric.active.ok .org-metric-value{color:#a7c896}
      mismo tamaño que en vertical (no lo achicamos), pero "Volver" pasa
      a estar al lado, no abajo, para que entre completo en la pantalla. */
   #s-input{padding-top:16px}
-  .keypad-wrap{
-    display:grid;
-    grid-template-columns:auto auto;
-    align-items:end;
-    justify-content:center;
-    column-gap:48px;
-  }
-  /* Pisamos la vieja regla de margen (pensada para otro layout) a
-     propósito, con más especificidad, para que no vuelva a solaparse
-     con el teclado. */
+  .keypad-wrap{text-align:center;white-space:nowrap}
+  .keypad-wrap #keypadMount{display:inline-block;vertical-align:bottom;white-space:normal}
+  /* Separación de "Volver" respecto del teclado: método simple
+     (inline-block + margin-left) en vez de grid/flex, porque el
+     navegador de la tablet no estaba respetando el gap del grid. */
   #s-input .back-btn-bottom.back-btn-right{
-    margin:0 !important;
-    align-self:end;
+    display:inline-block !important;
+    vertical-align:bottom !important;
+    margin:0 0 0 72px !important;
   }
-  /* Teclado de letras (apellido): es mucho más ancho que el numérico,
-     así que lo achicamos para que entre en la pantalla junto con el
-     botón "Volver" al lado, sin que ninguna letra quede afuera. */
-  .keypad-wrap.mode-alpha{column-gap:20px}
+  /* Teclado de letras (apellido): lo agrandamos un 20% respecto de la
+     versión anterior (que había quedado muy chica), y separamos un
+     poco menos de "Volver" porque ocupa más ancho de por sí. */
   .keypad-wrap.mode-alpha .alpha-kb{
-    width:min(900px,62vw);
-    gap:5px;
+    width:min(1080px,74vw);
+    gap:6px;
   }
-  .keypad-wrap.mode-alpha .key{font-size:clamp(13px,1.5vw,19px)}
-  .keypad-wrap.mode-alpha .key.special{font-size:clamp(9px,1.1vw,13px)}
+  .keypad-wrap.mode-alpha .key{font-size:clamp(16px,1.8vw,23px)}
+  .keypad-wrap.mode-alpha .key.special{font-size:clamp(11px,1.3vw,16px)}
+  .keypad-wrap.mode-alpha .back-btn-bottom.back-btn-right{
+    margin-left:32px !important;
+  }
 }
 </style>
 </head>
